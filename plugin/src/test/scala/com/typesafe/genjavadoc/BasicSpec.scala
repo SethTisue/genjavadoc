@@ -20,8 +20,15 @@ class BasicSpec extends WordSpec with Matchers with CompilerSpec {
 
   override def sources = BasicSpec.sources
   override def expectedPath: String = {
-
-    val patchFile = s"src/test/resources/patches/${scala.util.Properties.versionNumberString}.patch"
+    import scala.util.Properties.versionNumberString
+    val patchVersion =
+      if (versionNumberString.startsWith("2.12.0"))
+        "2.12.0"
+      else if (versionNumberString.startsWith("2.12."))
+        "2.12.1"
+      else
+        versionNumberString
+    val patchFile = s"src/test/resources/patches/$patchVersion.patch"
     if (new java.io.File(patchFile).exists) { // we have a patch to apply to expected output for this scala version
       "rm -rf target/expected_output".! // cleanup from previous runs
       "cp -r src/test/resources/expected_output target/".! // copy expected output to a place which is going to be patched
