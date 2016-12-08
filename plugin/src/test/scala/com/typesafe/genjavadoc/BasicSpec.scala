@@ -29,6 +29,7 @@ class BasicSpec extends WordSpec with Matchers with CompilerSpec {
       else
         versionNumberString
     val patchFile = s"src/test/resources/patches/$patchVersion.patch"
+    println(("%%% patching", patchFile, new java.io.File(patchFile).exists))
     if (new java.io.File(patchFile).exists) { // we have a patch to apply to expected output for this scala version
       "rm -rf target/expected_output".! // cleanup from previous runs
       "cp -r src/test/resources/expected_output target/".! // copy expected output to a place which is going to be patched
