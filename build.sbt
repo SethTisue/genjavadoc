@@ -1,6 +1,3 @@
-// so we can set this from automated builds and also depending on Scala version
-lazy val scalaTestVersion = settingKey[String]("The version of ScalaTest to use.")
-
 // copied from Roman Janusz's Silencer plugin (https://github.com/ghik/silencer/)
 val saveTestClasspath = taskKey[File](
   "Saves test classpath to a file so that it can be used by embedded scalac in tests")
@@ -19,7 +16,7 @@ lazy val `genjavadoc-plugin` = (project in file("plugin"))
   .settings(
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-compiler" % scalaVersion.value,
-      "org.scalatest" %% "scalatest" % scalaTestVersion.value % "test"
+      "junit" % "junit" % "4.12" % "test"
     ),
     saveTestClasspath := {
       val result = (classDirectory in Test).value / "embeddedcp"
@@ -62,11 +59,6 @@ lazy val defaults = Seq(
     } {
       scala210and211Versions ++ (0 to latest212).map(i => s"2.12.$i") ++ pre213.map(s => s"2.13.0-$s")
     }
-  },
-  scalaTestVersion := {
-    val Some((2, scalaMajor)) = CrossVersion.partialVersion(scalaVersion.value)
-    if (scalaMajor >= 12) "3.0.3"
-    else "2.1.3"
   },
   resolvers += Resolver.mavenLocal,
   publishTo := {

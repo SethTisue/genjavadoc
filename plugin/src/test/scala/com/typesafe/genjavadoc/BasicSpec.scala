@@ -1,10 +1,6 @@
 package com.typesafe.genjavadoc
 
-import org.scalatest.Matchers
-import org.scalatest.WordSpec
-
 import util._
-
 import scala.sys.process._
 
 object BasicSpec {
@@ -16,7 +12,7 @@ object BasicSpec {
 }
 
 /** Test basic behaviour of genjavadoc with standard settings */
-class BasicSpec extends WordSpec with Matchers with CompilerSpec {
+class BasicSpec extends CompilerSpec {
 
   override def sources = BasicSpec.sources
   override def expectedPath: String = {
