@@ -16,8 +16,9 @@ lazy val `genjavadoc-plugin` = (project in file("plugin"))
   .settings(
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-compiler" % scalaVersion.value,
-      "junit" % "junit" % "4.12" % "test"
+      "com.novocode" % "junit-interface" % "0.11" % "test"
     ),
+    testOptions += Tests.Argument(TestFrameworks.JUnit, "-v"),  // see test names as they run
     saveTestClasspath := {
       val result = (classDirectory in Test).value / "embeddedcp"
       IO.write(result, (fullClasspath in Test).value.map(_.data.getAbsolutePath).mkString("\n"))
@@ -39,13 +40,13 @@ lazy val `genjavadoc-plugin` = (project in file("plugin"))
       else default
     },
     crossVersion := CrossVersion.full,
-    exportJars := true,
-    scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlint", "-Xfatal-warnings")
+    exportJars := true
   )
 
 lazy val defaults = Seq(
   organization := "com.typesafe.genjavadoc",
   scalaVersion := crossScalaVersions.value.last,
+  scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlint", "-Xfatal-warnings"),
   crossScalaVersions := {
     val latest210 = 6
     val latest211 = 11

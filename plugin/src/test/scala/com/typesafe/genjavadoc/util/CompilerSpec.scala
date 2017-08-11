@@ -4,6 +4,7 @@ package util
 import java.io.InputStreamReader
 import java.io.BufferedReader
 import java.io.File
+import org.junit.Test
 
 /** Utility trait for testing compiler bahaviour. */
 trait CompilerSpec {
@@ -24,13 +25,15 @@ trait CompilerSpec {
     s"genjavadoc:$kv"
   })
 
-  scalac.compile(sources)
-  assert(!scalac.reporter.hasErrors, "Scala compiler reported errors.")
-
-  lines(run(".", "diff", "-wurN",
-    "-I", "^ *//", // comment lines
-    "-I", "^ *private  java\\.lang\\.Object readResolve", // since Scala 2.12.0-M3, these methods are emitted in a later compiler phase
-    expectedPath, docPath)) foreach println
+  @Test
+  def test(): Unit = {
+    scalac.compile(sources)
+    assert(!scalac.reporter.hasErrors, "Scala compiler reported errors.")
+    lines(run(".", "diff", "-wurN",
+      "-I", "^ *//", // comment lines
+      "-I", "^ *private  java\\.lang\\.Object readResolve", // since Scala 2.12.0-M3, these methods are emitted in a later compiler phase
+      expectedPath, docPath)) foreach println
+  }
 
   private def run(dir: String, cmd: String*): Process = {
     new ProcessBuilder(cmd: _*).directory(new File(dir)).redirectErrorStream(true).start()

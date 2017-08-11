@@ -2,6 +2,7 @@ package com.typesafe.genjavadoc
 
 import java.net.URLClassLoader
 import java.lang.reflect.Modifier
+import org.junit.Test
 
 import util._
 
@@ -146,8 +147,10 @@ class SignatureSpec extends Matchers {
     }.toMap
   }
 
-  for (className <- expectedClasses) {
-    check(className)
-  }
+  @Test
+  def test(): Unit =
+    for (className <- expectedClasses) {
+      check(className)
+    }
 
 }
